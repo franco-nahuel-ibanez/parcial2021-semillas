@@ -1,0 +1,96 @@
+import plantas.*
+import parcelas.*
+
+describe "plantas"{
+	
+	const parcela1 = new Parcela(ancho=20, largo=1, horasDeSol=8)
+	const parcela2 = new Parcela(ancho=20, largo=1, horasDeSol=8)
+	const parcela3 = new Parcela(ancho=20, largo=1, horasDeSol=8)
+	
+	const parcela4 = new Parcela(ancho=5, largo=1, horasDeSol=8)
+	
+	
+	const soja1 = new Soja(anioObtencion=2009, altura=1.2)
+	const soja2 = new Soja(anioObtencion=2009, altura=1.2)
+	const soja3 = new Soja(anioObtencion=2009, altura=1.2)
+	const soja4 = new Soja(anioObtencion=2009, altura=1.2)
+	const soja5 = new Soja(anioObtencion=2009, altura=1.2)
+	
+	const sojaTransgenica = new SojaTransgenica(anioObtencion=2009, altura=1.2)
+	
+	const quinoa1 = new Quinoa(horasDeSolToleradas=12, anioObtencion=2010, altura=1)
+	
+	method initialize(){
+		parcela1.puedePlantar(soja1)
+		parcela1.puedePlantar(soja2)
+		parcela1.puedePlantar(soja3)
+		parcela1.puedePlantar(soja4)
+		
+		//parcela 2
+		parcela2.puedePlantar(soja1)
+		parcela2.puedePlantar(soja2)
+	
+		//parcela 3
+		parcela3.puedePlantar(soja1)
+		parcela3.puedePlantar(soja2)
+		parcela3.puedePlantar(soja3)
+	
+		//INTA
+		inta.agregarParcela(parcela1)
+		inta.agregarParcela(parcela2)
+		inta.agregarParcela(parcela3)
+	}
+	
+	test "menta"{
+		const menta = new Menta(anioObtencion=2000, altura=1)
+		const menta2 = new Menta(anioObtencion=2000, altura=0.3)
+		
+		assert.that( menta.daSemillas() )
+		assert.equals(3, menta.espacio() )
+		
+		assert.notThat( menta2.daSemillas() )
+		assert.equals(0.9, menta2.espacio() )
+	}
+	
+	test "soja"{
+		const soja = new Soja(anioObtencion=2009, altura=0.6)
+		
+		assert.notThat( soja.daSemillas() )
+		assert.equals( 7, soja.horasDeSolToleradas() )
+		assert.equals( 0.3, soja.espacio() )
+	}
+	
+	test "quinoa"{
+		assert.that( quinoa1.daSemillas())
+	}
+	
+	test "parcela: el total de sus plantas es 4"{
+		
+		assert.equals(4, parcela1.totalPlantas() )
+	}
+	
+	test "parcela: si intentamos agregar una 5ta planta devuelve un error"{
+		assert.throwsExceptionWithMessage( "No puede ser plantada", {parcela1.puedePlantar(soja5)}) 
+	}
+	
+	test "parcela ideal: quinoa"{
+		assert.that( quinoa1.parcelaIdeal(parcela2) )
+	}
+	
+	test "parcela ideal: soja transgenica"{
+		assert.that( sojaTransgenica.parcelaIdeal(parcela4) )
+	}
+	
+	test "parcela NO ideal: soja transgenica"{
+		assert.notThat( sojaTransgenica.parcelaIdeal(parcela2) )
+	}
+	
+	
+	test "inta: promedio de plantas"{
+		assert.equals(3, inta.promedioPlantas() )
+	}
+	
+}
+
+
+
